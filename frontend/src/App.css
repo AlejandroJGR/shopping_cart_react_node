@@ -242,6 +242,10 @@
   color: white;
   letter-spacing: 1.15px;
 }
+.cart-checkout .cart-login{
+  background-color: yellow;
+  color: black;
+}
 .continue-shopping, 
 .start-shopping{
   margin-top: 1rem;

@@ -5,11 +5,14 @@ import { useGetAllProductsQuery } from "../features/productsApi";
 
 const Home = () => {
   const{data, error, isLoading} = useGetAllProductsQuery();
+
+
   const dispatch = useDispatch();
-  const history = useNavigate();
+  const navigate = useNavigate();
+
   const handdleAddToCart = (products) =>{
     dispatch(addToCart(products));
-    history('/cart');
+    navigate('/cart');
   };
 
   return (
@@ -24,7 +27,7 @@ const Home = () => {
             <img src={products.image} alt={products.name} />
             <div className="details">
               <span>{products.desc}</span>
-              <span className="price">{products.price}</span>
+              <span className="price">${products.price}</span>
             </div>
             <button onClick={()=> handdleAddToCart(products)}>Add To Cart</button>
           </div>)}
