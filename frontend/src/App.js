@@ -10,6 +10,7 @@ import Home from './components/Home';
 import NotFound from './components/NotFound';
 import Register from './components/auth/Register';
 import Login from './components/auth/Login';
+import CheckoutSuccess from './components/checkoutSuccess';
 
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
           <Routes>
             <Route path='/cart' element={<Cart />} />
             <Route path="/register" element={<Register/>} />
+            <Route path="/checkout-success" element={<CheckoutSuccess/>} />
             <Route path="/login" element={<Login/>} />
             <Route path='/not-found' element={<NotFound />} />
             <Route path='/' element={<App />} />

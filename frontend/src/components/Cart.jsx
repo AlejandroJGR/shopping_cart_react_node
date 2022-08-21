@@ -8,6 +8,7 @@ import {
   getTotals,
   removeFromCart,
 } from "../features/cartSlice";
+import PayButton from "./PayButton";
 const Cart = () => {
   const cart = useSelector((state) => state.cart);
   const auth = useSelector((state) => state.auth);
@@ -103,7 +104,7 @@ const Cart = () => {
               </div>
               <p>Taxes and shipping calculated at checkout</p>
               {auth._id ? (
-                <button>Check out</button>
+                <PayButton cartItem={cart.cartItems} />
               ) : (
                 <button
                   className="cart-login"
