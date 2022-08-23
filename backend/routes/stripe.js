@@ -17,7 +17,62 @@ const bodyParser = require('body-parser');
 //checkout data
 
 router.post('/create-checkout-session', async (req, res) => {
+  const customer = await stripe.customers.create({
+    metadata: {
+      userId: req.body.userId,
+      cart: JSON.stringify(req.body.cartItems)
+    }
+  })
+
   const session = await stripe.checkout.sessions.create({
+    shipping_options: [
+      {
+        shipping_rate_data: {
+          type: 'fixed_amount',
+          fixed_amount: {
+            amount: 0,
+            currency: 'usd',
+          },
+          display_name: 'Free shipping',
+          // Delivers between 5-7 business days
+          delivery_estimate: {
+            minimum: {
+              unit: 'business_day',
+              value: 5,
+            },
+            maximum: {
+              unit: 'business_day',
+              value: 7,
+            },
+          }
+        }
+      },
+      {
+        shipping_rate_data: {
+          type: 'fixed_amount',
+          fixed_amount: {
+            amount: 1500,
+            currency: 'usd',
+          },
+          display_name: 'Next day air',
+          // Delivers in exactly 1 business day
+          delivery_estimate: {
+            minimum: {
+              unit: 'business_day',
+              value: 1,
+            },
+            maximum: {
+              unit: 'business_day',
+              value: 1,
+            },
+          }
+        }
+      },
+    ],
+    phone_number_collection: {
+      enabled: true,
+    },
+    customer: customer.id,
     line_items: [
       {
         price_data: {
@@ -35,12 +90,14 @@ router.post('/create-checkout-session', async (req, res) => {
     cancel_url: `${process.env.CLIENT_URL}/cart`,
   });
   res.send({ url: session.url });
-
 });
 
+//STRIPE WEBHOOK
+// let endpointSecret = "whsec_0426d231532740046689984baf95c1d0b165e32e55b6404ea7befb436c1b8c1a";
+
 // Match the raw body to content type application/json
-router.post('/webhook', bodyParser.raw({type: 'application/json'}), (request, response) => {
-  const event = request.body;
+router.post('/webhook', bodyParser.raw({ type: 'application/json' }), (req, res) => {
+  const event = req.body;
   // Handle the event
   switch (event.type) {
     case 'payment_intent.succeeded':
@@ -56,8 +113,8 @@ router.post('/webhook', bodyParser.raw({type: 'application/json'}), (request, re
       console.log(`Unhandled event type ${event.type}`);
   }
 
-  // Return a 200 response to acknowledge receipt of the event
-  response.json({received: true});
+  // Return a 200 res to acknowledge receipt of the event
+  res.json({ received: true });
 });
 
 module.exports = router;

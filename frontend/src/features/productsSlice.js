@@ -1,4 +1,4 @@
-import {createSlice, createAsyncThunk} from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const initialState = {
@@ -9,11 +9,11 @@ const initialState = {
 
 export const productsFetch = createAsyncThunk(
   "products/productsFetch",
-  async(id=null, { rejectWithValue }) => {
-    try{
+  async (id = null, { rejectWithValue }) => {
+    try {
       const response = await axios.get("http://localhost:5000/products")
       return response?.data;
-    }catch(error){
+    } catch (error) {
       return rejectWithValue("an error has ocurred")
     };
   },
@@ -25,16 +25,16 @@ const productsSlice = createSlice({
   reducers: {},
   extraReducers: {
     //immer 
-    [productsFetch.pending]: (state, action) =>{
+    [productsFetch.pending]: (state, action) => {
       state.status = "pending";
     },
-    [productsFetch.fulfilled]: (state, action) =>{
+    [productsFetch.fulfilled]: (state, action) => {
       state.status = "success";
       state.items = action.payload;
     },
-    [productsFetch.rejected]: (state, action) =>{
+    [productsFetch.rejected]: (state, action) => {
       state.status = "rejected";
-      state.error = action.payload; 
+      state.error = action.payload;
     },
   },
 });
