@@ -12,6 +12,7 @@ const router = express.Router();
 
 // Use body-parser to retrieve the raw body as a buffer
 const bodyParser = require('body-parser');
+const { Order } = require("../models/order");
 
 
 //checkout data
@@ -92,6 +93,28 @@ router.post('/create-checkout-session', async (req, res) => {
   res.send({ url: session.url });
 });
 
+//create Order
+const createOrder = async(customer, data) =>{
+  const Items = JSON.parse(customer.metadata.cart);
+
+  const newOrder = new Order({
+    userId: customer.metadata.userId,
+    customerId: data.customer,
+    paymentIntentId: data.payment_intent,
+    products: Items,
+    subtotal: data.amount_subtotal,
+    total: data.amount_total,
+    shipping: data.customer_detail,
+    payment_status: data.payment_status,
+  });
+  try{
+   const savedOrder = await newOrder.save();
+   console.log("Processed Order:", savedOrder);
+  }catch(err){
+    console.log(err);
+  }
+}
+
 //STRIPE WEBHOOK
 // let endpointSecret = "whsec_0426d231532740046689984baf95c1d0b165e32e55b6404ea7befb436c1b8c1a";
 
@@ -103,6 +126,11 @@ router.post('/webhook', bodyParser.raw({ type: 'application/json' }), (req, res)
     case 'payment_intent.succeeded':
       const paymentIntent = event.data.object;
       console.log('PaymentIntent was successful!');
+      stripe.customers
+        .retrieve(data.customer)
+        .then((customer) => {
+          createOrder(customer, data)
+        })
       break;
     case 'payment_method.attached':
       const paymentMethod = event.data.object;

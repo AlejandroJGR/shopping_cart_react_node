@@ -1,44 +1,46 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { addToCart } from "../features/cartSlice";
-import { useGetAllProductsQuery } from "../features/productsApi";
 
 const Home = () => {
-  const { data, error, isLoading } = useGetAllProductsQuery();
-
+  const {items: data, status} = useSelector((state)=> state.products);
+  
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const handdleAddToCart = (products) => {
+  
+  // const { data, error, isLoading } = useGetAllProductsQuery();
+  
+  const handleAddToCart = (products) => {
     dispatch(addToCart(products));
     navigate("/cart");
   };
 
   return (
     <div className="home-container">
-      {isLoading ? (
-        <p>Loading...</p>
-      ) : error ? (
-        <p>An error ocurred</p>
-      ) : (
+      {status === "success" ? (
         <>
           <h2>New Arrivals</h2>
           <div className="products">
-            {data?.map((products) => (
-              <div key={products.id} className="product">
-                <h3>{products.name}</h3>
-                <img src={products.image} alt={products.name} />
-                <div className="details">
-                  <span>{products.desc}</span>
-                  <span className="price">${products.price}</span>
+            {data &&
+              data?.map((products) => (
+                <div key={products._id} className="product">
+                  <h3>{products.name}</h3>
+                  <img src={products.image.url} alt={products.name} />
+                  <div className="details">
+                    <span>{products.desc}</span>
+                    <span className="price">${products.price}</span>
+                  </div>
+                  <button onClick={() => handleAddToCart(products)}>
+                    Add To Cart
+                  </button>
                 </div>
-                <button onClick={() => handdleAddToCart(products)}>
-                  Add To Cart
-                </button>
-              </div>
-            ))}
+              ))}
           </div>
         </>
+      ) : status === "pending" ? (
+        <p>Loading...</p>
+      ) : (
+        <p>Unexpected error occured...</p>
       )}
     </div>
   );
