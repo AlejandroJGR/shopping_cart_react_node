@@ -68,9 +68,13 @@ const Cart = () => {
             {cart.cartItems?.map((cartItem) => (
               <div className="cart-item" key={cartItem._id}>
                 <div className="cart-product">
-                  <img src={cartItem.image.url} alt={cartItem.name} />
+                  <Link to={`/product/${cartItem._id}`}>
+                    <img src={cartItem.image.url} alt={cartItem.name} />
+                  </Link>
                   <div>
-                    <h3>{cartItem.name}</h3>
+                    <Link to={`/product/${cartItem._id}`} className="quit-hiperlink">
+                      <h3>{cartItem.name}</h3>
+                    </Link>
                     <p>{cartItem.desc}</p>
                     <button onClick={() => handleRemoveFromCart(cartItem)}>
                       Remove

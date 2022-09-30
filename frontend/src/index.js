@@ -9,10 +9,14 @@ import productsReducer, { productsFetch } from './features/productsSlice';
 import { productsApi } from './features/productsApi';
 import cartReducer, { getTotals } from './features/cartSlice';
 import authReducer, { loadUser } from './features/authSlice';
+import OrdersSlice from './features/OrdersSlice';
+import usersSlice from './features/usersSlice';
 
 const store = configureStore({
   reducer:{
     products: productsReducer, 
+    orders: OrdersSlice, //Didnt change it too "reducer" just to see if it works too
+    users: usersSlice,
     cart: cartReducer,
     auth: authReducer,
     [productsApi.reducerPath]: productsApi.reducer, 

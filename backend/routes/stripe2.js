@@ -1,3 +1,5 @@
+//Code I've been doing along with he tutorial and 
+//didn't work
 const express = require("express");
 const Stripe = require("stripe");
 

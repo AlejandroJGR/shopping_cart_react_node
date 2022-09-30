@@ -1,27 +1,52 @@
 import styled from "styled-components";
 import { NavLink, Outlet } from "react-router-dom";
-import {useSelector} from "react-redux";
+import { useSelector } from "react-redux";
+import { FaUsers, FaStore, FaClipboard, FaTachometerAlt } from "react-icons/fa";
 
 const Dashboard = () => {
-  const auth = useSelector((state)=>state.auth);
+  const auth = useSelector((state) => state.auth);
 
-  if(!auth.isAdmin) return <p className="access-denied">Access Denied.</p>
+  if (!auth.isAdmin) return <p className="access-denied">Access Denied.</p>;
 
   return (
     <StyledDashboard>
       <SideNav>
         <h3>Quick Links</h3>
         <NavLink
-          className={({isActive}) => isActive ? "link-Active" : "link-Inactive"}
+          className={({ isActive }) =>
+            isActive ? "link-Active" : "link-Inactive"
+          }
           to="/admin/summary"
         >
+          <FaTachometerAlt className="margin-right" />
           Summary
         </NavLink>
         <NavLink
-          className={({isActive}) => isActive ? "link-Active" : "link-Inactive"}
+          className={({ isActive }) =>
+            isActive ? "link-Active" : "link-Inactive"
+          }
           to="/admin/products"
         >
+          <FaStore className="margin-right" />
           Products
+        </NavLink>
+        <NavLink
+          className={({ isActive }) =>
+            isActive ? "link-Active" : "link-Inactive"
+          }
+          to="/admin/orders"
+        >
+          <FaClipboard className="margin-right" />
+          Orders
+        </NavLink>
+        <NavLink
+          className={({ isActive }) =>
+            isActive ? "link-Active" : "link-Inactive"
+          }
+          to="/admin/users"
+        >
+          <FaUsers className="margin-right" />
+          Users
         </NavLink>
       </SideNav>
       <Content>
@@ -54,8 +79,15 @@ const SideNav = styled.div`
   }
   a {
     text-decoration: none;
-    margin-bottom: 1rem;
+    margin: 0 0 1rem 1rem;
     font-size: 14px;
+    display: flex;
+    align-items: center;
+    font-weight: 700;
+    
+    svg{
+      font-size: 18px;
+    }
   }
 `;
 

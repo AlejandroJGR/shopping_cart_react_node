@@ -21,9 +21,8 @@ router.post('/create-checkout-session', async (req, res) => {
   const customer = await stripe.customers.create({
     metadata: {
       userId: req.body.userId,
-      cart: JSON.stringify(req.body.cartItems)
-    }
-  })
+    },
+  });
 
   const session = await stripe.checkout.sessions.create({
     shipping_options: [
@@ -79,9 +78,9 @@ router.post('/create-checkout-session', async (req, res) => {
         price_data: {
           currency: 'usd',
           product_data: {
-            name: 'T-shirt',
+            name: 'Fold 2',
           },
-          unit_amount: 2000,
+          unit_amount: 150000,
         },
         quantity: 1,
       },
@@ -94,14 +93,12 @@ router.post('/create-checkout-session', async (req, res) => {
 });
 
 //create Order
-const createOrder = async(customer, data) =>{
-  const Items = JSON.parse(customer.metadata.cart);
-
+const createOrder = async(customer, data, lineItems) =>{
   const newOrder = new Order({
     userId: customer.metadata.userId,
     customerId: data.customer,
     paymentIntentId: data.payment_intent,
-    products: Items,
+    products: lineItems.data,
     subtotal: data.amount_subtotal,
     total: data.amount_total,
     shipping: data.customer_detail,
@@ -129,7 +126,15 @@ router.post('/webhook', bodyParser.raw({ type: 'application/json' }), (req, res)
       stripe.customers
         .retrieve(data.customer)
         .then((customer) => {
-          createOrder(customer, data)
+          stripe.checkout.sessions.listLineItems(
+            data.id,
+            {},
+            function(err, lineItems) {
+              // asynchronously called to console
+              console.log("line_items: ",lineItems);
+              createOrder(customer, data, lineItems);
+            }
+          );
         })
       break;
     case 'payment_method.attached':
