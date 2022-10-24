@@ -21,6 +21,7 @@ import Orders from './components/admin/Orders';
 import Product from './components/Details/Product';
 import Order from './components/Details/Order';
 import UserProfile from './components/Details/UserProfile';
+import CreateUser from './components/admin/CreateUser';
 
 
 function App() {
@@ -42,6 +43,7 @@ function App() {
               <Route path="products" element={<Products />}>
                 <Route index element={<ProductsList />} />
                 <Route path="create-product" element={<CreateProduct />} />
+                <Route path="create-user" element={<CreateUser />} />
               </Route>
               <Route path="summary" element={<Summary />} />
               <Route path="users" element={<Users />} />

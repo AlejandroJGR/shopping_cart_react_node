@@ -5,6 +5,27 @@ const bcrypt = require ('bcrypt');
 
 const router = require("express").Router();
 
+//Create an user
+router.post("/", isAdmin, async (req, res) => {
+  const { name, email, password, isAdmin } = req.body;
+
+  try {
+        const user = new User({
+          name,
+          email,
+          password,
+          isAdmin,
+        })
+        const savedUser = await user.save()
+
+        res.status(200).send(savedUser);
+      } catch (err) {
+    console.log(err);
+    res.status(500).send(err);
+  }
+});
+
+
 //Get All Users
 router.get("/", isAdmin, async (req, res) => {
   try {

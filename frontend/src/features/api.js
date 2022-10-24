@@ -1,4 +1,6 @@
-export const url = "http://localhost:5000/api/";
+const port = process.env.PORT || 5000;
+
+export const url = `http://localhost:${port}/api/`;
 
 export const setHeaders = ()=>{
   const headers = {

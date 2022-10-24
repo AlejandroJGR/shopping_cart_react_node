@@ -1,0 +1,1 @@
+<script src="https://www.paypal.com/sdk/js?client-id=sb-2xndo21114668@personal.example.com"></script>
